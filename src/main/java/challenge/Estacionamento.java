@@ -1,10 +1,13 @@
 package challenge;
 
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 
 public class Estacionamento {
     final int numberOtNumberOfParkingSpots = 10;
-    HashMap< String, Carro > listOfParkedCars = new HashMap<>(  );
+    final int seniorDriverAge = 55;
+    final int legalAge = 18;
+
+    LinkedHashSet< Carro > listOfParkedCars = new LinkedHashSet<>();
 
     public Estacionamento() {
     }
@@ -13,20 +16,40 @@ public class Estacionamento {
         return numberOtNumberOfParkingSpots;
     }
 
-    private HashMap< String, Carro > getListOfParkedCars() {
+    private LinkedHashSet< Carro > getListOfParkedCars() {
         return listOfParkedCars;
     }
 
-    private void setListOfParkedCars( HashMap< String, Carro > listOfParkedCars ) {
+    private void setListOfParkedCars( LinkedHashSet< Carro > listOfParkedCars ) {
         this.listOfParkedCars = listOfParkedCars;
     }
 
     public void estacionar( Carro carro ) throws EstacionamentoException {
-        if ( getListOfParkedCars().size() < getNumberOfParkingSpots() ) {
-            getListOfParkedCars().put( carro.getPlaca(), carro );
-        }/*else{
-            throw new EstacionamentoException( "The limit of parking spots was exceeded" );
-        }*/
+        boolean isOfLegalAge = carro.getMotorista().getIdade() > legalAge;
+
+        if ( isOfLegalAge ) {
+            boolean hasEmptySlot = getListOfParkedCars().size() < getNumberOfParkingSpots();
+
+            if ( hasEmptySlot ) {
+                getListOfParkedCars().add( carro );
+            } else {
+                boolean isNotParked = true;
+
+                for ( Carro listedCar : getListOfParkedCars() ) {
+                    boolean isSenior = listedCar.getMotorista().getIdade() >= seniorDriverAge;
+
+                    if ( !isSenior ) {
+                        getListOfParkedCars().remove( listedCar );
+                        getListOfParkedCars().add( carro );
+                        isNotParked = false;
+                        break;
+                    }
+                }
+                if ( isNotParked ) throw new EstacionamentoException( "The parking site has no available spots" );
+            }
+        } else {
+            throw new EstacionamentoException( "The driver is a minor" );
+        }
     }
 
     public int carrosEstacionados() {
@@ -34,9 +57,12 @@ public class Estacionamento {
     }
 
     public boolean carroEstacionado( Carro carro ) {
-        if ( getListOfParkedCars().containsKey( carro.getPlaca() ) == true ){
+        System.out.println(getListOfParkedCars());
+        boolean isParked = getListOfParkedCars().contains( carro );
+
+        if ( isParked ) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

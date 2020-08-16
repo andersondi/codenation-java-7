@@ -87,10 +87,10 @@ public class Carro {
             return this;
         }
 
-        public Carro build() throws NullPointerException {
+        public Carro build() throws NullPointerException, EstacionamentoException {
             if ( cor == null ) throw new NullPointerException( "The COR field can't be null" );
             if ( placa == null ) throw new NullPointerException( "The PLACA field can't be null" );
-            if ( motorista == null ) throw new NullPointerException( "The MOTORISTA field can't be null" );
+            if ( motorista == null ) throw new EstacionamentoException( "The MOTORISTA field can't be null" );
             return new Carro(motorista, placa, cor);
         }
     }

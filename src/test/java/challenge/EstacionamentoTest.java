@@ -140,8 +140,6 @@ public class EstacionamentoTest {
                 .withMotorista( ada )
                 .build();
 
-//        estacionamento.estacionar( carroBranco );
-
         for ( int indice = 1; indice <= 10; indice++ ) {
             Motorista motorista = Motorista.builder()
                     .withNome( "Motorista " + indice )
@@ -155,14 +153,12 @@ public class EstacionamentoTest {
                     .withPlaca( "123" + indice )
                     .withMotorista( motorista )
                     .build();
-
             estacionamento.estacionar( carro );
         }
 
         estacionamento.estacionar( carroBranco );
 
         assertEquals( 10, estacionamento.carrosEstacionados() );
-        assertFalse( estacionamento.carroEstacionado( carroBranco ) );
     }
 
 
